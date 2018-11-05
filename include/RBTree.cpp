@@ -167,21 +167,34 @@ public:
 		}
 		
 		z->right = new RBElement();
+		//z->right->parent = z;
 		z->left = new RBElement();
+		//z->right->parent = z;
 		z->color = Color::RED;
 
 		this->insertFixUp(z);
 	}
 
 	void transplant(RBElement* u, RBElement* v){
+		
+		std::cout << "z: " << u->toString() << std::endl;
+		std::cout << "y: " << v->toString() << std::endl;
+
 		if(u->parent->isNil()){
 			this->root = v;
+
+			//std::cout << "root: " << this->root->toString() << std::endl;
+
 		}else if(u == u->parent->left){
 			u->parent->left = v;
 		}else{
 			u->parent->right = v;
 		}
+		
 		v->parent = u->parent;
+		
+		std::cout << "za: " << u->toString() << std::endl;
+		std::cout << "ya: " << v->toString() << std::endl;
 	}
 
 	RBElement* minimun(RBElement* x){
@@ -197,6 +210,8 @@ public:
 		while( x != this->root && x->color == Color::BLACK){
 			if(x == x->parent->left){
 				RBElement* w = x->parent->right;
+				
+				std::cout << "lw: "<< w->toString() << std::endl;
 
 				if(w->color == Color::RED){
 					w->color = Color::BLACK;
@@ -204,6 +219,9 @@ public:
 					this->leftRotate(x->parent);
 					w = x->parent->right;
 				}
+
+				std::cout << "lw: "<< w->toString() << std::endl;
+
 				if(w->left->color == Color::BLACK && w->right->color == Color::BLACK){
 					w->color = Color::RED;
 					x = x->parent;
@@ -223,26 +241,37 @@ public:
 
 				RBElement* w = x->parent->left;
 
+				std::cout << "rw: "<< w->toString() << std::endl;
+
 				if(w->color == Color::RED){
 					w->color = Color::BLACK;
 					x->parent->color = Color::RED;
 					this->rightRotate(x->parent);
 					w = x->parent->left;
 				}
+
+				std::cout << "rw2: "<< w->toString() << std::endl;
+
 				if(w->left->color == Color::BLACK && w->right->color == Color::BLACK){
 					w->color = Color::RED;
 					x = x->parent;
+					std::cout << "rw3: "<< w->toString() << std::endl;
 				}else if(w->left->color == Color::BLACK){
 					w->left->color = Color::BLACK;
 					w->color = Color::RED;
 					this->leftRotate(w);
 					w = x->parent->left;
+
+					std::cout << "rw4: "<< w->toString() << std::endl;
+
 				}else{
 					w->color = x->parent->color;
 					x->parent->color = Color::BLACK;
 					w->left->color = Color::BLACK;
 					this->leftRotate(x->parent);
 					x = this->root;
+
+					std::cout << "rw5: "<< w->toString() << std::endl;
 				}
 			}
 		}
@@ -252,6 +281,7 @@ public:
 	}
 
 	void remove(RBElement* z){
+		std::cout << "z: " << z->toString() << std::endl;
 		RBElement* y = z;
 		Color yOriginalColor = y->color;
 		
@@ -265,22 +295,46 @@ public:
 			this->transplant(z,z->left);
 		}else{
 			y = this->minimun(z->right);
+			
+			std::cout <<"y: " << y->toString() << std::endl;
+			
 			yOriginalColor = y->color;
 			x = y->right;
+
+			std::cout <<"x: " << x->toString() << std::endl;
+
 			if(y->parent == z){
 				x->parent = y;
+				std::cout <<"x2: " << x->toString() << std::endl;				
 			}else{
 				this->transplant(y,y->right);
 				y->right = z->right;
 				y->right->parent = y;
 			}
+			/*
+			std::cout << "z: " << z->toString() << std::endl;
+			std::cout << "y: " << y->toString() << std::endl;
+			*/
 			this->transplant(z,y);
+			/*
+			std::cout << "z2: " << z->toString() << std::endl;
+			std::cout << "y2: " << y->toString() << std::endl;
+			*/
 			y->left = z->left;
 			y->left->parent = y;
 			y->color =  z->color;
+			
+			std::cout <<"y: " << y->toString() << std::endl;
+			std::cout <<"x: " << x->toString() << std::endl;
+			std::cout <<"ARVORE: " << this->toStringPreOrder() << std::endl;
 		}
 
 		if(yOriginalColor == Color::BLACK){
+
+			std::cout << "Remove concertar: " << x->toString() << std::endl;
+			
+			std::cout << "corecao" << std::endl;
+
 			this->removeFixUp(x);
 		}
 
@@ -289,7 +343,7 @@ public:
 	RBElement* search(std::string name){
 		RBElement* x = this->root;
 
-		while( !x->isNil() || x->value!=name){
+		while( !x->isNil() && x->value!=name){
 			if (x->value.compare(name)<0){
 				x = x->left;
 			}else{
@@ -298,10 +352,10 @@ public:
 		}
 
 		if(x->isNil()){
-			std::cout << "SEARCH : Element with the name : " << name << "was not found in the tree " << std::endl;
+			std::cout << "SEARCH : Element with the name : " << name << " was not found in the tree " << std::endl;
 			return nullptr;
 		}else{
-			std::cout << "SEARCH : Element with the name : " << name << "was found in the tree " << std::endl;
+			std::cout << "SEARCH : Element with the name : " << name << " was found in the tree " << std::endl;
 			std::cout << "SEARCH : Element : " << x->toString() << std::endl;
 			return x;	
 		}

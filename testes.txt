@@ -5,4 +5,5 @@ garoto 1
 sigaa 1
 remove 0
 pedra 0
-sapato 0 
+sapato 0
+ 

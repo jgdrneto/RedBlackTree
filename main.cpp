@@ -29,11 +29,15 @@ int main(int argc, char const *argv[]){
 	}
 
 	RBTree t;
-	/*
+	
 	for(Command c : Interpreter::createCommandsFromFile(argv[1])){
 		
-		RBElement* element = rbtree.search(c.value);
+		std::cout << "==================================" << std::endl;
 
+		std::cout << "Comando: " << c.toString() << std::endl;
+
+		RBElement* element = t.search(c.value);
+	
 		switch(c.operation){
 			case Operation::INSERT:
 				
@@ -45,20 +49,28 @@ int main(int argc, char const *argv[]){
 			case Operation::REMOVE:
 				
 				if(element!=nullptr){
-
+					t.remove(element);	
 				}
 
 			break;
 		}
 
-		std::cout << c.toString() << std::endl;
+		std::cout << "==================================" << std::endl;
+			
+		std::cout << "Árvore" << std::endl;
+			
+		std::cout << t.toStringPreOrder() << std::endl;
+
+		std::cout << "==================================" << std::endl;
+
 	}
-	*/
 	
-	RBElement no("c",Color::BLACK);
-	RBElement no2("adc",Color::BLACK);
-	RBElement no3("abc",Color::BLACK);
-	RBElement no4("d",Color::BLACK);
+	/*
+	RBElement no("pedra",Color::BLACK);
+	RBElement no2("sapato",Color::BLACK);
+	RBElement no3("algodao",Color::BLACK);
+	RBElement no4("garoto",Color::BLACK);
+	RBElement no5("sigaa",Color::BLACK);
 	
 	//e.left = new RBElement("a", Color::RED);
 	//e.right = new RBElement("p", Color::RED);
@@ -79,6 +91,10 @@ int main(int argc, char const *argv[]){
 
 	std::cout << "inseriu no4" << std::endl;
 
+	t.insert(&no5);
+
+	std::cout << "inseriu no5" << std::endl;
+
 	std::cout << "Impressão da árvore" << std::endl;
 
 	//std::cout << no3.toString() << std::endl;
@@ -87,10 +103,14 @@ int main(int argc, char const *argv[]){
 
 	std::cout << "===========================" << std::endl;
 
+	std::cout << "Chaves ordenadas" << std::endl;
 
 	std::cout << t.printSortKeys() << std::endl;
 	
-	/*
+	std::cout << "===========================" << std::endl;
+
+	//RBElement* element = t.search("remove");
+
 	t.remove(&no);
 
 	std::cout << "remove no1" <<std::endl;

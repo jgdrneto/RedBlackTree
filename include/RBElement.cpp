@@ -63,26 +63,34 @@ public:
 
 		print+=", ";		
 
-		if(this->left->isNil()){
-			print+= "NIL";
+		if(this->left != nullptr){
+
+			if(this->left->isNil()){
+				print+= "NIL";
+			}else{
+				print+=this->left->value;
+			}
 		}else{
-			print+=this->left->value;
+			print+="NULO";
 		}
 
 		print+=", ";
 
-		if(this->right->isNil()){
-			print+="NIL";
+		if(this->right != nullptr){
+			if(this->right->isNil()){
+				print+="NIL";
+			}else{
+				print+=this->right->value;
+			}
 		}else{
-			print+=this->right->value;
+			print+="NULO";
 		}
-
 		print +=")" ;
 		return print;
 	}
 
 	bool isNil(){
-		return this->value=="NIL" && this->color==Color::BLACK && this->left==nullptr && this->right==nullptr;
+		return this->value=="NIL" && this->color==Color::BLACK;
 	}
 
 	int blackHeight(){
