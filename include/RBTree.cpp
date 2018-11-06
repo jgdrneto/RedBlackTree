@@ -210,8 +210,6 @@ public:
 		while( x != this->root && x->color == Color::BLACK){
 			if(x == x->parent->left){
 				RBElement* w = x->parent->right;
-				
-				std::cout << "lw: "<< w->toString() << std::endl;
 
 				if(w->color == Color::RED){
 					w->color = Color::BLACK;
@@ -220,28 +218,26 @@ public:
 					w = x->parent->right;
 				}
 
-				std::cout << "lw: "<< w->toString() << std::endl;
-
 				if(w->left->color == Color::BLACK && w->right->color == Color::BLACK){
 					w->color = Color::RED;
 					x = x->parent;
-				}else if(w->right->color == Color::BLACK){
-					w->left->color = Color::BLACK;
-					w->color = Color::RED;
-					this->rightRotate(w);
-					w = x->parent->right;
 				}else{
-					w->color = x->parent->color;
-					x->parent->color = Color::BLACK;
-					w->right->color = Color::BLACK;
-					this->leftRotate(x->parent);
-					x = this->root;
+					if(w->right->color == Color::BLACK){
+						w->left->color = Color::BLACK;
+						w->color = Color::RED;
+						this->rightRotate(w);
+						w = x->parent->right;
+					}else{
+						w->color = x->parent->color;
+						x->parent->color = Color::BLACK;
+						w->right->color = Color::BLACK;
+						this->leftRotate(x->parent);
+						x = this->root;
+					}
 				}
 			}else{
 
 				RBElement* w = x->parent->left;
-
-				std::cout << "rw: "<< w->toString() << std::endl;
 
 				if(w->color == Color::RED){
 					w->color = Color::BLACK;
@@ -250,38 +246,31 @@ public:
 					w = x->parent->left;
 				}
 
-				std::cout << "rw2: "<< w->toString() << std::endl;
-
 				if(w->left->color == Color::BLACK && w->right->color == Color::BLACK){
 					w->color = Color::RED;
 					x = x->parent;
-					std::cout << "rw3: "<< w->toString() << std::endl;
-				}else if(w->left->color == Color::BLACK){
-					w->left->color = Color::BLACK;
-					w->color = Color::RED;
-					this->leftRotate(w);
-					w = x->parent->left;
-
-					std::cout << "rw4: "<< w->toString() << std::endl;
-
-				}else{
-					w->color = x->parent->color;
-					x->parent->color = Color::BLACK;
-					w->left->color = Color::BLACK;
-					this->leftRotate(x->parent);
-					x = this->root;
-
-					std::cout << "rw5: "<< w->toString() << std::endl;
+				}else{ 
+					if(w->left->color == Color::BLACK){
+						w->right->color = Color::BLACK;
+						w->color = Color::RED;
+						this->leftRotate(w);
+						w = x->parent->left;
+					}else{
+						w->color = x->parent->color;
+						x->parent->color = Color::BLACK;
+						
+						w->left->color = Color::BLACK;
+		
+						this->rightRotate(x->parent);
+						x = this->root;
+					}
 				}
 			}
 		}
-
 		x->color = Color::BLACK;
-
 	}
 
 	void remove(RBElement* z){
-		std::cout << "z: " << z->toString() << std::endl;
 		RBElement* y = z;
 		Color yOriginalColor = y->color;
 		
@@ -296,16 +285,11 @@ public:
 		}else{
 			y = this->minimun(z->right);
 			
-			std::cout <<"y: " << y->toString() << std::endl;
-			
 			yOriginalColor = y->color;
 			x = y->right;
 
-			std::cout <<"x: " << x->toString() << std::endl;
-
 			if(y->parent == z){
-				x->parent = y;
-				std::cout <<"x2: " << x->toString() << std::endl;				
+				x->parent = y;				
 			}else{
 				this->transplant(y,y->right);
 				y->right = z->right;
@@ -323,18 +307,9 @@ public:
 			y->left = z->left;
 			y->left->parent = y;
 			y->color =  z->color;
-			
-			std::cout <<"y: " << y->toString() << std::endl;
-			std::cout <<"x: " << x->toString() << std::endl;
-			std::cout <<"ARVORE: " << this->toStringPreOrder() << std::endl;
 		}
 
 		if(yOriginalColor == Color::BLACK){
-
-			std::cout << "Remove concertar: " << x->toString() << std::endl;
-			
-			std::cout << "corecao" << std::endl;
-
 			this->removeFixUp(x);
 		}
 
