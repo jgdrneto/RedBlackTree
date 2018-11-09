@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]){
 		std::cerr << "Enter the filename";
     	exit(1);
 	}
-
+	
 	RBTree t;
 	
 	for(Command c : Interpreter::createCommandsFromFile(argv[1])){

@@ -9,9 +9,12 @@ class RBTree{
 public:
 
 	RBElement* root;
-	
+	RBElement* NIL;
+
 	RBTree(){
+		this->NIL = new RBElement();
 		this->root = new RBElement();
+		//this->root->parent = this->NIL;
 	}
 
 	RBTree(RBElement& nRoot){
@@ -167,9 +170,7 @@ public:
 		}
 		
 		z->right = new RBElement();
-		//z->right->parent = z;
 		z->left = new RBElement();
-		//z->right->parent = z;
 		z->color = Color::RED;
 
 		this->insertFixUp(z);
@@ -177,14 +178,8 @@ public:
 
 	void transplant(RBElement* u, RBElement* v){
 		
-		std::cout << "z: " << u->toString() << std::endl;
-		std::cout << "y: " << v->toString() << std::endl;
-
 		if(u->parent->isNil()){
 			this->root = v;
-
-			//std::cout << "root: " << this->root->toString() << std::endl;
-
 		}else if(u == u->parent->left){
 			u->parent->left = v;
 		}else{
@@ -192,9 +187,6 @@ public:
 		}
 		
 		v->parent = u->parent;
-		
-		std::cout << "za: " << u->toString() << std::endl;
-		std::cout << "ya: " << v->toString() << std::endl;
 	}
 
 	RBElement* minimun(RBElement* x){
@@ -227,13 +219,12 @@ public:
 						w->color = Color::RED;
 						this->rightRotate(w);
 						w = x->parent->right;
-					}else{
-						w->color = x->parent->color;
-						x->parent->color = Color::BLACK;
-						w->right->color = Color::BLACK;
-						this->leftRotate(x->parent);
-						x = this->root;
 					}
+					w->color = x->parent->color;
+					x->parent->color = Color::BLACK;
+					w->right->color = Color::BLACK;
+					this->leftRotate(x->parent);
+					x = this->root;
 				}
 			}else{
 
@@ -255,15 +246,14 @@ public:
 						w->color = Color::RED;
 						this->leftRotate(w);
 						w = x->parent->left;
-					}else{
-						w->color = x->parent->color;
-						x->parent->color = Color::BLACK;
-						
-						w->left->color = Color::BLACK;
-		
-						this->rightRotate(x->parent);
-						x = this->root;
 					}
+					w->color = x->parent->color;
+					x->parent->color = Color::BLACK;
+						
+					w->left->color = Color::BLACK;
+		
+					this->rightRotate(x->parent);
+					x = this->root;
 				}
 			}
 		}
@@ -319,7 +309,8 @@ public:
 		RBElement* x = this->root;
 
 		while( !x->isNil() && x->value!=name){
-			if (x->value.compare(name)<0){
+			
+			if (name.compare(x->value)<0){
 				x = x->left;
 			}else{
 				x = x->right;
