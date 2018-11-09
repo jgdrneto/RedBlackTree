@@ -18,14 +18,6 @@ public:
 	RBElement* left;
 	RBElement* right;
 
-	RBElement() {
-		this->parent= nullptr;
-		this->left 	= nullptr;
-		this->right = nullptr;
-		this->value = "NIL";
-		this->color = Color::BLACK;
-	}
-
 	RBElement(std::string nValue, Color nColor){
 		this->parent= nullptr;
 		this->left 	= nullptr;
@@ -89,13 +81,7 @@ public:
 		return print;
 	}
 
-	bool isNil(){
-		return this->value=="NIL" && this->color==Color::BLACK;
-	}
-
 	int blackHeight(){
-
-		//std::cout << "Altura negra : " << this->value << std::endl;
 
 		if(this->isNil()){
 			return 0;
@@ -104,12 +90,6 @@ public:
 			int l = auxBlackHeight(this->left);
 			int r = auxBlackHeight(this->right);
 			
-			/*
-			std::cout << this->value << std::endl;
-			std::cout << "LEFT: "<< l << std::endl;
-			std::cout << "RIGHT: " << r << std::endl;
-			*/
-
 			if(l>=r){
 				return l;
 			}else{
@@ -119,7 +99,11 @@ public:
 	}
 
 private:
-	
+
+	bool isNil(){
+		return this->value=="NIL" && this->color==Color::BLACK;
+	}
+
 	int auxBlackHeight(RBElement* root){
 
 		if(root->isNil()){

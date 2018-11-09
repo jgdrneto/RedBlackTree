@@ -12,13 +12,8 @@ public:
 	RBElement* NIL;
 
 	RBTree(){
-		this->NIL = new RBElement();
-		this->root = new RBElement();
-		//this->root->parent = this->NIL;
-	}
-
-	RBTree(RBElement& nRoot){
-		this->root = &nRoot;
+		this->NIL = new RBElement("NIL", Color::BLACK);
+		this->root = this->NIL;
 	}
 
 	std::string toStringPreOrder(){
@@ -31,10 +26,10 @@ public:
 		return value;
 	} 
 
-	std::string printSortKeys(){
+	std::string toStringSortKeys(){
 		std::string sortKeysPrint;
 
-		std::vector<std::string> keys = this->takeKeys(this->root);
+		std::vector<std::string> keys = this->getKeys(this->root);
 
 		std::sort(keys.begin(), keys.end());
 
@@ -56,13 +51,13 @@ public:
 		RBElement* y = x->left;
 		x->left = y->right;
 
-		if(!y->right->isNil()){
+		if(y->right != this->NIL){
 			y->right->parent = x; 
 		}
 
 		y->parent = x->parent; 
 		
-		if(x->parent->isNil()){
+		if(x->parent == this->NIL){
 			this->root = y;
 		}else if(x == x->parent->left){
 			x->parent->left = y;
@@ -80,13 +75,13 @@ public:
 		RBElement* y = x->right;
 		x->right = y->left;
 
-		if(!y->left->isNil()){
+		if(y->left != this->NIL){
 			y->left->parent = x; 
 		}
 
 		y->parent = x->parent; 
 		
-		if(x->parent->isNil()){
+		if(x->parent == this->NIL){
 			this->root = y;
 		}else if(x == x->parent->left){
 			x->parent->left = y;
@@ -147,10 +142,10 @@ public:
 
 	void insert(RBElement* z){
 
-		RBElement* y = new RBElement();
+		RBElement* y = this->NIL;
 		RBElement* x = this->root;
 
-		while( !x->isNil()){
+		while( x != this->NIL){
 			y = x;
 			if (z->value.compare(x->value)<0){
 				x = x->left;
@@ -161,7 +156,7 @@ public:
 
 		z->parent = y;
 
-		if(y->isNil()){
+		if(y == this->NIL){
 			this->root = z;
 		}else if (z->value.compare(y->value)<0){
 			y->left = z;
@@ -169,8 +164,8 @@ public:
 			y->right = z;
 		}
 		
-		z->right = new RBElement();
-		z->left = new RBElement();
+		z->right = this->NIL;
+		z->left = this->NIL;
 		z->color = Color::RED;
 
 		this->insertFixUp(z);
@@ -178,7 +173,7 @@ public:
 
 	void transplant(RBElement* u, RBElement* v){
 		
-		if(u->parent->isNil()){
+		if(u->parent == this->NIL){
 			this->root = v;
 		}else if(u == u->parent->left){
 			u->parent->left = v;
@@ -191,7 +186,7 @@ public:
 
 	RBElement* minimun(RBElement* x){
 
-		while(!x->left->isNil()){
+		while(x->left != this->NIL){
 			x = x->left;
 		}
 		
@@ -266,10 +261,10 @@ public:
 		
 		RBElement* x = nullptr;
 		
-		if(z->left->isNil()){
+		if(z->left == this->NIL){
 			x = z->right;
 			this->transplant(z,z->right);
-		}else if(z->right->isNil()){
+		}else if(z->right == this->NIL){
 			x = z->left;
 			this->transplant(z,z->left);
 		}else{
@@ -285,30 +280,25 @@ public:
 				y->right = z->right;
 				y->right->parent = y;
 			}
-			/*
-			std::cout << "z: " << z->toString() << std::endl;
-			std::cout << "y: " << y->toString() << std::endl;
-			*/
+
 			this->transplant(z,y);
-			/*
-			std::cout << "z2: " << z->toString() << std::endl;
-			std::cout << "y2: " << y->toString() << std::endl;
-			*/
+
 			y->left = z->left;
 			y->left->parent = y;
-			y->color =  z->color;
+			y->color = z->color;
 		}
 
 		if(yOriginalColor == Color::BLACK){
 			this->removeFixUp(x);
 		}
 
+		delete(z);
 	}
 
 	RBElement* search(std::string name){
 		RBElement* x = this->root;
 
-		while( !x->isNil() && x->value!=name){
+		while( x != this->NIL && x->value!=name){
 			
 			if (name.compare(x->value)<0){
 				x = x->left;
@@ -317,11 +307,11 @@ public:
 			}
 		}
 
-		if(x->isNil()){
-			std::cout << "SEARCH : Element with the name : " << name << " was not found in the tree " << std::endl;
+		if(x == this->NIL){
+			std::cout << "SEARCH : Element with the name " << name << " was not found in tree " << std::endl;
 			return nullptr;
 		}else{
-			std::cout << "SEARCH : Element with the name : " << name << " was found in the tree " << std::endl;
+			std::cout << "SEARCH : Element with the name " << name << " was found in tree " << std::endl;
 			std::cout << "SEARCH : Element : " << x->toString() << std::endl;
 			return x;	
 		}
@@ -329,16 +319,16 @@ public:
 
 private:
 
-	std::vector<std::string> takeKeys(RBElement* element){
+	std::vector<std::string> getKeys(RBElement* element){
 		
 		std::vector<std::string> keys;
 
-		if(!element->isNil()){
+		if(element != this->NIL){
 
 			keys.push_back(element->value);
 
-			std::vector<std::string> l = takeKeys(element->left);
-			std::vector<std::string> r = takeKeys(element->right);
+			std::vector<std::string> l = this->getKeys(element->left);
+			std::vector<std::string> r = this->getKeys(element->right);
 
 			keys.insert(keys.end(), l.begin(), l.end());
 			keys.insert(keys.end(), r.begin(), r.end());
@@ -349,7 +339,7 @@ private:
 
 	std::string auxToStringPreOrder(RBElement* element){
 
-		if(element->isNil()){
+		if(element == nullptr || element == this->NIL){
 			return "";
 		}else{
 
@@ -357,11 +347,11 @@ private:
 			
 			toString+=element->toString()+"\n";
 
-			if(!element->left->isNil()){
+			if(element->left != this->NIL){
 				toString+=auxToStringPreOrder(element->left);
 			}
 			
-			if(!element->right->isNil()){
+			if(element->right != this->NIL){
 				toString+=auxToStringPreOrder(element->right);
 			}
 
