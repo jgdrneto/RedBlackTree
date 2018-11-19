@@ -1,9 +1,0 @@
-pedra 1
-sapato 1
-algodao 1
-garoto 1
-sigaa 1
-remove 0
-pedra 0
-sapato 0
- 

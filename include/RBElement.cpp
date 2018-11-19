@@ -101,6 +101,7 @@ public:
 private:
 
 	bool isNil(){
+
 		return this->value=="NIL" && this->color==Color::BLACK;
 	}
 
@@ -133,7 +134,6 @@ private:
 			}
 
 		}
-
 	}
 
 };

@@ -45,14 +45,15 @@ int main(int argc, char const *argv[]){
 			
 					std::cout << t.toStringPreOrder() << std::endl;
 
-					std::cout << "==================================" << std::endl;
+					std::cout << "==================================" << std::endl;	
+						
 				}
 
 			break;
 		}
 
 		std::cout << "##########################################" << std::endl;
-
+		std::cout << "" << std::endl;
 	}
 	
 	return 0;
